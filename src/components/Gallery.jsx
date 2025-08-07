@@ -1,50 +1,35 @@
-const Gallery = ({name, id, image, race, ki, gender}) => {
-    return(
-        <div className="">
-            <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
-                <a href="#">
-                <img className="rounded-t-lg" src={image} alt="" />
-                </a>
-                <div className="p-5">
-                <a href="#">
-                    <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                    #{id} - {name}
-                    </h5>
-                </a>
-                <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                    Genero: {gender}
-                </p>
-                <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                    Ki: {ki}
-                </p>
-                <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                    Raza: {race}
-                </p>
-                <a
-                    href="#"
-                    className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                >
-                    Ver mas
-                    <svg
-                    className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 14 10"
-                    >
-                    <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M1 5h12m0 0L9 1m4 4L9 9"
-                    />
-                    </svg>
-                </a>
-                </div>
-            </div>
+const Gallery = ({ name, id, image, race, ki, gender, affiliation, description, setSeleccionarPersonaje }) => {
+    return (
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out overflow-hidden">
+        <div className="w-full h-90 bg-white flex items-center justify-center relative overflow-relative">
+            <img src={image} alt={name} title={`${name}`} className="max-h-full object-contain transition-transform duration-300 ease-in-out hover:scale-110 absolute z-10" />
         </div>
-    )
-}
+        <div className="p-4">
+            <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-1">
+            #{id} - {name}
+            </h2>
+            <p className="text-sm text-gray-700 dark:text-gray-300">Género: {gender}</p>
+            <p className="text-sm text-gray-700 dark:text-gray-300">Ki: {ki}</p>
+            <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">Raza: {race}</p>
+            <button
+            onClick={() => setSeleccionarPersonaje({ name, id, image, race, ki, gender, affiliation, description })}
+            className="w-full flex justify-center items-center gap-2 text-sm text-white font-medium bg-blue-600 hover:bg-blue-700 transition-colors px-4 py-2 rounded-lg"
+            >
+            Ver más
+            <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+            >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+            </button>
+        </div>
+        </div>
+    );
+};
+
 
 export default Gallery
