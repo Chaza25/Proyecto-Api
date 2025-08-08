@@ -14,7 +14,6 @@ const MainHome = ({valor}) => {
     const getPersonajes = async () => {
     try {
         const resp = await axios.get(BASE_URL_CHARACTERS);
-        console.log(resp.data.items);
         setPersonajes(resp.data.items);
         setLoading(false);
         setPrev(resp.data.links.previous);
@@ -25,22 +24,49 @@ const MainHome = ({valor}) => {
     };
 
 
-    const getCharacterName = async() => {
-        let resp = await axios.get(`${BASE_URL_CHARACTERS}?race=${valor}`)
-        console.log(resp.data);
-        setPersonajes(resp.data)
-        setLoading(false)
-        setPrev(resp.data.links.previous) //revisar
-        setNext(resp.data.links.next) //revisar
-    }
+    const getCharacterName = async () => {
+        try {
+            setLoading(true);
+            let resp;
+
+            if (valor.trim() === "") {
+            setPersonajes([]);
+            setLoading(false);
+            return;
+            }
+
+            resp = await axios.get(`${BASE_URL_CHARACTERS}?race=${valor}`);
+
+            if (!resp.data.items?.length && !resp.data.length) {
+            resp = await axios.get(`${BASE_URL_CHARACTERS}?name=${valor}`);
+            }
+
+            // Detectar si la respuesta es array o tiene .items
+            const personajesData = Array.isArray(resp.data)
+            ? resp.data
+            : resp.data.items || [];
+
+            setPersonajes(personajesData);
+
+            // Prev y Next solo si existen
+            setPrev(resp.data?.links?.previous || null);
+            setNext(resp.data?.links?.next || null);
+
+            setLoading(false);
+        } catch (error) {
+            console.error("Error en la búsqueda:", error);
+            setPersonajes([]);
+            setLoading(false);
+        }
+        };
+
+
 
     const handlePrev = async () => {
         try {
-            console.log("Disparo prev");
             let resp = await axios.get(prev)
-            console.log(resp.data);
             setPersonajes(resp.data.items)
-            setPrev(resp.data.links.previous) //revisar
+            setPrev(resp.data.links.previous) 
             setNext(resp.data.links.next)    
         } catch (error) {
             console.log("Error en la peticion", error);
@@ -48,11 +74,9 @@ const MainHome = ({valor}) => {
     }
 
     const handleNext = async () => {
-        console.log("disparo next");
         let resp = await axios.get(next)
-        console.log(resp.data);
         setPersonajes(resp.data.items)
-        setPrev(resp.data.links.previous) //revisar
+        setPrev(resp.data.links.previous) 
         setNext(resp.data.links.next)
     }
 
@@ -60,7 +84,7 @@ const MainHome = ({valor}) => {
         let resp = await axios.get("https://dragonball-api.com/api/characters?page=6")
         console.log(resp.data);
         setPersonajes(resp.data.items)
-        setPrev(resp.data.links.previous) //revisar
+        setPrev(resp.data.links.previous) 
         setNext(resp.data.links.next)
     }
 
@@ -68,7 +92,7 @@ const MainHome = ({valor}) => {
         let resp = await axios.get("https://dragonball-api.com/api/characters?page=1")
         console.log(resp.data);
         setPersonajes(resp.data.items)
-        setPrev(resp.data.links.previous) //revisar
+        setPrev(resp.data.links.previous) 
         setNext(resp.data.links.next)
     }
 
@@ -78,11 +102,15 @@ const MainHome = ({valor}) => {
     },  [valor]);
 
     return (
-        <>
+        <div className="bg-yellow-200">
+            <div className="p-5 text-center items-center mx-auto">
+                {prev && <button type="button" className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" onClick={handlePrev}>Anterior</button>}
+                {next && <button type="button" className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" onClick={handleNext}>Siguiente</button>}
+            </div>
         {seleccionarPersonaje && (
             <div className="fixed inset-0 bg-black/70 backdrop-filter backdrop-saturate-150 backdrop-opacity-50 flex items-center justify-center z-50"
             onClick={() => setSeleccionarPersonaje(null)}>
-                <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg max-w-3xl w-full relative"
+                <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg max-w-2xl w-full relative"
                     onClick={(e) => e.stopPropagation()}>
                 <button
                     onClick={() => setSeleccionarPersonaje(null)}
@@ -93,7 +121,7 @@ const MainHome = ({valor}) => {
                 <img
                     src={seleccionarPersonaje.image}
                     alt={seleccionarPersonaje.name}
-                    className="w-full h-96 object-contain mb-4 transition-transform duration-300 ease-in-out hover:scale-120"
+                    className="w-full h-96 object-contain mb-4 transition-transform duration-300 ease-in-out hover:scale-110"
                     title={`${seleccionarPersonaje.name}`}
                 />
                 <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">
@@ -123,7 +151,7 @@ const MainHome = ({valor}) => {
                 <button type="button" className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" onClick={handleUltimo}>Ultima pagina</button>
             </div>
             
-        </>
+        </div>
     );
 };
 

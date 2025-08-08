@@ -2,7 +2,7 @@ const Gallery = ({ name, id, image, race, ki, gender, affiliation, description, 
     return (
         <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out overflow-hidden">
         <div className="w-full h-90 bg-white flex items-center justify-center relative overflow-relative">
-            <img src={image} alt={name} title={`${name}`} className="max-h-full object-contain transition-transform duration-300 ease-in-out hover:scale-110 absolute z-10" />
+            <img src={image} alt={name} title={`${name}`} onClick={() => setSeleccionarPersonaje({ name, id, image, race, ki, gender, affiliation, description })} className="max-h-full object-contain transition-transform duration-300 ease-in-out hover:scale-110 absolute z-10" />
         </div>
         <div className="p-4">
             <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-1">
